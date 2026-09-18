@@ -1,0 +1,6 @@
+{
+  "name": "SchoolOS",
+  "description": "Multi-tenant school fee management web app with student ledgers, fee collection, sequential receipt generation, and real-time reports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

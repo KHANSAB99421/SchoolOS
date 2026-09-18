@@ -1,0 +1,101 @@
+{
+  "entities": {
+    "School": {
+      "title": "School",
+      "description": "Tenant school organization document",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 200 },
+        "address": { "type": "string", "maxLength": 500 },
+        "phone": { "type": "string", "maxLength": 50 },
+        "logoUrl": { "type": "string", "maxLength": 1000 },
+        "academicYear": { "type": "string", "maxLength": 50 },
+        "createdAt": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["name", "academicYear"]
+    },
+    "Student": {
+      "title": "Student",
+      "description": "Student record within a school",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 150 },
+        "class": { "type": "string", "maxLength": 50 },
+        "section": { "type": "string", "maxLength": 20 },
+        "rollNo": { "type": "string", "maxLength": 50 },
+        "admissionNo": { "type": "string", "maxLength": 50 },
+        "parentName": { "type": "string", "maxLength": 150 },
+        "parentMobile": { "type": "string", "maxLength": 30 },
+        "status": { "type": "string", "enum": ["active", "inactive"] }
+      },
+      "required": ["name", "class", "admissionNo", "parentMobile", "status"]
+    },
+    "FeeStructure": {
+      "title": "FeeStructure",
+      "description": "Fee structure per class and academic year",
+      "type": "object",
+      "properties": {
+        "class": { "type": "string", "maxLength": 50 },
+        "academicYear": { "type": "string", "maxLength": 50 },
+        "heads": { "type": "array" },
+        "installments": { "type": "array" }
+      },
+      "required": ["class", "academicYear", "heads", "installments"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "Payment receipt record",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string", "maxLength": 100 },
+        "amount": { "type": "number" },
+        "mode": { "type": "string", "enum": ["Cash", "UPI", "Card", "Cheque"] },
+        "date": { "type": "string", "maxLength": 50 },
+        "receiptNo": { "type": "string", "maxLength": 100 },
+        "headBreakup": { "type": "object" },
+        "collectedBy": { "type": "string", "maxLength": 150 },
+        "remarks": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["studentId", "amount", "mode", "date", "receiptNo", "headBreakup"]
+    },
+    "SchoolUser": {
+      "title": "SchoolUser",
+      "description": "User profile with role scoped to school",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 150 },
+        "role": { "type": "string", "enum": ["admin", "accountant"] },
+        "mobile": { "type": "string", "maxLength": 30 },
+        "email": { "type": "string", "maxLength": 150 },
+        "schoolId": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["name", "role", "schoolId"]
+    }
+  },
+  "firestore": {
+    "/schools/{schoolId}": {
+      "schema": { "$ref": "#/entities/School" },
+      "description": "School organizational root document"
+    },
+    "/schools/{schoolId}/students/{studentId}": {
+      "schema": { "$ref": "#/entities/Student" },
+      "description": "Students belonging to the school"
+    },
+    "/schools/{schoolId}/feeStructures/{structureId}": {
+      "schema": { "$ref": "#/entities/FeeStructure" },
+      "description": "Fee structures for classes in this school"
+    },
+    "/schools/{schoolId}/payments/{paymentId}": {
+      "schema": { "$ref": "#/entities/Payment" },
+      "description": "Payment transactions and receipts in this school"
+    },
+    "/schools/{schoolId}/users/{uid}": {
+      "schema": { "$ref": "#/entities/SchoolUser" },
+      "description": "Authorized staff users in this school"
+    },
+    "/users/{uid}": {
+      "schema": { "$ref": "#/entities/SchoolUser" },
+      "description": "Global user lookup mapping UID to their active schoolId and role"
+    }
+  }
+}
